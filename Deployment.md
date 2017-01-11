@@ -1,7 +1,10 @@
 Deployment for test systems
 -----------------------------
 
-Use the deployment script for openstack
+Use the deployment script for openstack which van be found here
+https://raw.githubusercontent.com/AtzeDeVries/puppet-nba/master/openstack_bootstrap.sh
+
+
 ### Interact with elasticsearch from CLI
 ```
 curl -XGET es:9200/_cat/health
