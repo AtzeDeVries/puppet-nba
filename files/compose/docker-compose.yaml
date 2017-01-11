@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  api:
+    image: atzedevries/nba-wildfly-v2_master:latest
+    ports:
+      - "8080:8080"
+    links:
+      - es:es
+  es:
+    image: elasticsearch:2.3.5
+    environment:
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+    command: elasticsearch -Des.cluster.name="nba-cluster"
+  etl:
+    image: atzedevries/nba-etl-v2_master:latest
+    volumes:
+      - /tmp:/payload/data
+    links:
+      - es:es
+    command: /bin/bash -c 'while true; do echo this is the etl module ; sleep 600 ; done'
+  kibana:
+    image: atzedevries/kibana-sense:4.5
+    links:
+      - es:elasticsearch
+    ports:
+      - "5601:5601"
