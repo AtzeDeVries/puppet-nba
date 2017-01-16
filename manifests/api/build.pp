@@ -128,4 +128,12 @@ class api_builder::api::build(
     subscribe   => Exec["create ${image_name}:${timestamp}"],
   }
 
+  exec {"cleanup of build images of ${image_name}:${timestamp}" :
+    command     => "${docker_bin} rmi \
+                      ${registry_user}/${image_name}:${timestamp} \
+                      ${registry_user}/${image_name}:latest",
+    refreshonly => true,
+    subscribe   => Exec["push ${registry_user}/${image_name}:${timestamp} to docker hub "]
+  }
+
 }
