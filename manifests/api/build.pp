@@ -30,7 +30,7 @@ class api_builder::api::build(
       ensure => directory
   }
 
-  exec {"create git update check for ${branch}" :
+  exec {"create git update check for api-${branch}" :
     command => "${docker_bin} create \
                 --name ${check_name} \
                 -e GITHUB_USER=${github_username} \
@@ -40,10 +40,10 @@ class api_builder::api::build(
     unless  => "${docker_bin} ps -a | /bin/grep ${check_name}",
   }
 
-  exec { "${repository}:${branch} updated" :
+  exec { "${repository}:${branch}-api updated" :
     command => '/bin/echo',
     unless  => "${docker_bin} start -a ${check_name} | /bin/grep Same",
-    require => Exec["create git update check for ${branch}"],
+    require => Exec["create git update check for api-${branch}"],
   }
 
   exec {"inject sysctl setting for es-nba-${timestamp}" :
@@ -69,7 +69,7 @@ class api_builder::api::build(
                   --link es-nba-${timestamp}:es \
                   atzedevries/api-builder /build-nba-service.sh ${branch} install-service",
     refreshonly => true,
-    subscribe   => Exec["${repository}:${branch} updated"],
+    subscribe   => Exec["${repository}:${branch}-api updated"],
     require     => [Exec["run es-nba-${timestamp}"], File[$payload_dir]]
   }
 
