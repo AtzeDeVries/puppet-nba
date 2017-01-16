@@ -57,7 +57,7 @@ class api_builder::api::build(
                     elasticsearch:2.3.5 \
                     elasticsearch -Des.cluster.name=\"nba-cluster\" ",
     refreshonly => true,
-    subscribe   => Exec["${repository}:${branch} updated"],
+    subscribe   => Exec["${repository}:${branch}-api updated"],
   }
 
   exec { "build nba-${branch}"  :
